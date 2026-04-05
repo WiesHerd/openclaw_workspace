@@ -1,0 +1,10 @@
+HP PRINTER TEST
+===============
+Time: Sat Apr 04 2026
+Source: OpenClaw Assistant
+
+Test document for: HP LaserJet M234sdw
+IP: 192.168.0.188
+
+If you can read this on paper, your printer is working!
+OpenClaw verified: 2026-04-04

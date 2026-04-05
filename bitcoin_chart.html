@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bitcoin 5-Year Price Chart (2021-2026)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .chart-container {
+            position: relative;
+            height: 600px;
+            margin: 20px 0;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 Bitcoin Price Trend - Last 5 Years (2021-2026)</h1>
+        
+        <div class="chart-container">
+            <canvas id="bitcoinChart"></canvas>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f7931a;"></div>
+                <span>Bitcoin Price (USD)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #10b981;"></div>
+                <span>ROI from 2021</span>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">$65,706</div>
+                <div class="stat-label">Current Price (April 2026)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">+293%</div>
+                <div class="stat-label">5-Year ROI (from $17k)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$1.24T</div>
+                <div class="stat-label">Market Cap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"-3.96%</div>
+                <div class="stat-label">24h Change</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center; color: #666; font-size: 0.9em;">
+            <p><strong>Data Sources:</strong> casebitcoin.com, Yahoo Finance, CoinGecko | Updated: April 4, 2026</p>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('bitcoinChart').getContext('2d');
+        
+        // Bitcoin price data by year (approximate monthly averages from 2021-2026)
+        const labels = ['Jan 2021', 'Apr 2021', 'Jul 2021', 'Oct 2021', 'Jan 2022', 
+                       'Apr 2022', 'Jul 2022', 'Oct 2022', 'Jan 2023', 'Apr 2023',
+                       'Jul 2023', 'Oct 2023', 'Jan 2024', 'Apr 2024', 'Jul 2024',
+                       'Oct 2024', 'Jan 2025', 'Apr 2025', 'Jul 2025', 'Oct 2025', 'Jan 2026', 'Apr 2026'];
+        
+        // Historical price data (in USD)
+        const prices = [31000, 58000, 64000, 61000, 47000, 23000, 20000, 23000, 28000,
+                       30000, 31000, 27000, 30000, 29000, 62000, 70000, 100000, 90000,
+                       89000, 75000, 69000, 65706];
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Bitcoin Price (USD)',
+                    data: prices,
+                    borderColor: '#f7931a',
+                    backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#f7931a',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 14 },
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.y.toLocaleString('en-US');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000) + 'k';
+                            },
+                            padding: 10
+                        },
+                        beginAtZero: false,
+                        min: 15000,
+                        max: 115000
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

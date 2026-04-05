@@ -1,0 +1,36 @@
+const fs = require('fs');
+const path = require('path');
+
+reportlab = async function() {
+    const { PDFDocument } = require('pdf-lib');
+    const content = fs.readFileSync('/home/wherd/.openclaw/workspace/bitcoin_case_report.md', 'utf8');
+    
+    const pdfDoc = await PDFDocument.create();
+    const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const page = pdfDoc.addPage();
+    
+    page.drawText('BITCOIN CASE REPORT', { x: 50, y: 700, size: 24 });
+    page.drawText('---', { x: 225, y: 670, size: 12 });
+    
+    let y = 650;
+    const lines = content.split('\n');
+    for (const line of lines) {
+        if (!line.trim() || line.startsWith('#')) continue;
+        page.drawText(line, { x: 50, y: y, size: 11 });
+        y -= 10;
+    }
+    
+    await pdfDoc.save('/home/wherd/.openclaw/workspace/bitcoin_report.pdf');
+    console.log('PDF created successfully!');
+};
+
+reportlab();
+
+(async () => {
+    try {
+        await createAndPrintPDF();
+    } catch (err) {
+        console.error('Error:', err);
+        console.log('Try: ws大夫 @ 2');
+    }
+})();
