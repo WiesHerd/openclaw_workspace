@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTE Compensation Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+        }
+        
+        .form-group input::placeholder {
+            color: #bbb;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            padding: 30px;
+            display: none;
+        }
+        
+        .results-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-card {
+            background: #f8f9ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-card h3 {
+            color: #555;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-card h3 i {
+            font-size: 1.3rem;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin: 8px 0;
+            display: block;
+        }
+        
+        .result-label {
+            color: #666;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .change-positive {
+            color: #28a745;
+        }
+        
+        .change-negative {
+            color: #dc3545;
+        }
+        
+        .formula-section {
+            background: #f8f9ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .formula-section h3 {
+            color: #555;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .formula-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .formula-step-number {
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-right: 12px;
+            font-weight: 600;
+        }
+        
+        .formula-text {
+            flex: 1;
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-section {
+                padding: 25px 20px;
+            }
+            
+            .calculate-btn {
+                padding: 16px;
+            }
+            
+            .results-section {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FTE Calculator</h1>
+            <p>Provider Compensation Tool</p>
+        </div>
+        
+        <div class="form-section">
+            <div class="form-group">
+                <label for="currentSalary">💰 Current Salary ($)</label>
+                <input type="number" id="currentSalary" placeholder="Enter your current salary" min="0" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="currentFte">⏱️ Current FTE Rate</label>
+                <input type="number" id="currentFte" placeholder="e.g., 0.8 for 80%" min="0.01" max="1" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="newFte">🎯 Target FTE Rate</label>
+                <input type="number" id="newFte" placeholder="e.g., 1.0 for 100%" min="0.01" max="1" step="0.01">
+            </div>
+            
+            <button class="calculate-btn" id="calculateBtn">
+                Calculate Compensation
+            </button>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <h2>📊 Results</h2>
+            
+            <div class="result-card">
+                <h3><i>fas fa-percentage</i> Current FTE</h3>
+                <div class="result-label">Full-Time Equivalent Basis</div>
+                <div class="result-value" id="fte1Value">–</div>
+                <p class="result-label" id="fte1Percent">–</p>
+            </div>
+            
+            <div class="result-card">
+                <h3><i>fas fa-arrow-up-right-from-square</i> 1.0 FTE Equivalent</h3>
+                <div class="result-label">Your base full-time salary</div>
+                <div class="result-value" id="fte1Value">$<span id="fte1Salary">–</span></div>
+                <p class="result-label" id="fte1Percent">–</p>
+            </div>
+            
+            <div class="result-card">
+                <h3><i>fas fa-user-tie</i> New FTE Rate</h3>
+                <div class="result-label">Your target work percentage</div>
+                <div class="result-value" id="fte2Value">–</div>
+                <p class="result-label" id="fte2Percent">–</p>
+            </div>
+            
+            <div class="result-card">
+                <h3><i>fas fa-dollar-sign</i> New Salary</h3>
+                <div class="result-label">Your adjusted compensation</div>
+                <div class="result-value" id="newSalary">$<span id="newSalaryValue">–</span></div>
+            </div>
+            
+            <div class="result-card change-box" id="changeBox">
+                <h3><i>fas fa-exchange-alt</i> Salary Change</h3>
+                <div class="result-label">Difference from current</div>
+                <div class="result-value change-value" id="changeValue">$<span id="changeValueNum">–</span></div>
+                <p class="result-label change-pct" id="changePct">–</p>
+            </div>
+        </div>
+        
+        <div class="formula-section">
+            <h3>🧮 How It's Calculated</h3>
+            <div class="formula-step">
+                <div class="formula-step-number">1</div>
+                <div class="formula-text">Full-Time Equivalent Salary = Current Salary ÷ Current FTE</div>
+            </div>
+            <div class="formula-step">
+                <div class="formula-step-number">2</div>
+                <div class="formula-text">New Salary = 1.0 FTE Salary × New FTE Rate</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Created with ❤️ for your OpenClaw workspace</p>
+            <p><a href="https://github.com/WiesHerd/openclaw_workspace" target="_blank">View on GitHub</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            const changeBox = document.getElementById('changeBox');
+            
+            // Input elements
+            const currentSalaryInput = document.getElementById('currentSalary');
+            const currentFteInput = document.getElementById('currentFte');
+            const newFteInput = document.getElementById('newFte');
+            
+            // Result elements
+            const fte1Value = document.getElementById('fte1Value');
+            const fte1Percent = document.getElementById('fte1Percent');
+            const fte1SalarySpan = document.getElementById('fte1Salary');
+            const fte2Value = document.getElementById('fte2Value');
+            const fte2Percent = document.getElementById('fte2Percent');
+            const newSalaryValue = document.getElementById('newSalaryValue');
+            const changeValueNum = document.getElementById('changeValueNum');
+            const changePct = document.getElementById('changePct');
+            const changeValue = document.getElementById('changeValue');
+            
+            calculateBtn.addEventListener('click', function() {
+                // Get values
+                const currentSalary = parseFloat(currentSalaryInput.value);
+                const currentFte = parseFloat(currentFteInput.value);
+                const newFte = parseFloat(newFteInput.value);
+                
+                // Validate inputs
+                if (isNaN(currentSalary) || currentSalary <= 0) {
+                    alert('Please enter a valid current salary');
+                    currentSalaryInput.focus();
+                    return;
+                }
+                
+                if (isNaN(currentFte) || currentFte <= 0 || currentFte > 1) {
+                    alert('Please enter a valid current FTE between 0 and 1');
+                    currentFteInput.focus();
+                    return;
+                }
+                
+                if (isNaN(newFte) || newFte <= 0 || newFte > 1) {
+                    alert('Please enter a valid new FTE between 0 and 1');
+                    newFteInput.focus();
+                    return;
+                }
+                
+                // Perform calculations
+                const fte1Salary = currentSalary / currentFte;
+                const calculatedNewSalary = fte1Salary * newFte;
+                const salaryChange = calculatedNewSalary - currentSalary;
+                const salaryChangePct = (salaryChange / currentSalary) * 100;
+                
+                // Update UI
+                fte1Value.textContent = currentFte.toFixed(2);
+                fte1Percent.textContent = `(${ (currentFte * 100).toFixed(1) }%)`;
+                fte1SalarySpan.textContent = fte1Salary.toFixed(2);
+                
+                fte2Value.textContent = newFte.toFixed(2);
+                fte2Percent.textContent = `(${ (newFte * 100).toFixed(1) }%)`;
+                
+                newSalaryValue.textContent = calculatedNewSalary.toFixed(2);
+                
+                changeValueNum.textContent = Math.abs(salaryChange).toFixed(2);
+                changePct.textContent = `(${Math.abs(salaryChangePct).toFixed(1)}%)`;
+                
+                // Set change color
+                if (salaryChange > 0) {
+                    changeValue.classList.add('change-positive');
+                    changeValue.classList.remove('change-negative');
+                    changePct.classList.add('change-positive');
+                    changePct.classList.remove('change-negative');
+                } else if (salaryChange < 0) {
+                    changeValue.classList.add('change-negative');
+                    changeValue.classList.remove('change-positive');
+                    changePct.classList.add('change-negative');
+                    changePct.classList.remove('change-positive');
+                } else {
+                    changeValue.classList.remove('change-positive', 'change-negative');
+                    changePct.classList.remove('change-positive', 'change-negative');
+                }
+                
+                // Show results
+                resultsSection.style.display = 'block';
+                changeBox.style.display = 'block';
+                
+                // Trigger animation
+                requestAnimationFrame(() => {
+                    resultsSection.classList.add('show');
+                });
+            });
+            
+            // Allow Enter key to calculate
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    calculateBtn.click();
+                }
+            });
+            
+            // Focus first input on load
+            currentSalaryInput.focus();
+        });
+    </script>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
+    <!-- Using a simple CDN link for icons -->
+    <script>
+        // Fallback icon handling if Font Awesome fails
+        document.addEventListener('DOMContentLoaded', function() {
+            // Replace i tags with simple text if Font Awesome isn't loading
+            const icons = document.querySelectorAll('i');
+            icons.forEach(icon => {
+                // Simple fallback - the styling will still work
+            });
+        });
+    </script>
+</body>
+</html>
